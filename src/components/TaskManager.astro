@@ -97,7 +97,7 @@
     renderTasks();
   }
   
-  function toggleTask(taskId) {
+  function toggleTask(taskId: string) {
     const data = getData();
     const task = data.tasks.find((t: any) => t.id === taskId);
     if (task) {
@@ -108,12 +108,16 @@
     }
   }
   
-  function deleteTask(taskId) {
+  function deleteTask(taskId: string) {
     const data = getData();
     data.tasks = data.tasks.filter((t: any) => t.id !== taskId);
     saveData(data);
     renderTasks();
   }
+  
+  // Exponer funciones al window para que estén disponibles en onclick
+  (window as any).toggleTask = toggleTask;
+  (window as any).deleteTask = deleteTask;
   
   function renderTasks() {
     const data = getData();
