@@ -15,17 +15,12 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h2 
-              id="personName" 
-              class="text-lg font-semibold text-surface-900 dark:text-white cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-              onclick="editName()"
-              title="Click para editar"
-            >
+            <h2 id="personName" class="text-lg font-semibold text-surface-900 dark:text-white">
               ¿Cómo se llama?
             </h2>
-            <button onclick="editName()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors">
+            <button id="editNameBtn" class="text-surface-400 hover:text-pink-500 transition-colors">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
               </svg>
             </button>
           </div>
@@ -46,7 +41,7 @@
             </svg>
             <span class="text-xs text-surface-500 dark:text-surface-400">Calorías</span>
           </div>
-          <button onclick="editCalorieGoal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-300">
+          <button id="editCalorieBtn" class="text-surface-400 hover:text-pink-500">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
             </svg>
@@ -70,9 +65,9 @@
             </svg>
             <span class="text-xs text-surface-500 dark:text-surface-400">Peso</span>
           </div>
-          <button onclick="showWeightHistory()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-300">
+          <button id="showWeightBtn" class="text-surface-400 hover:text-pink-500">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625z"/>
             </svg>
           </button>
         </div>
@@ -155,19 +150,26 @@
   </div>
 </section>
 
-<!-- Modal para editar -->
-<div id="editModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 hidden items-center justify-center z-50 p-4" onclick="closeModal(event)">
-  <div class="bg-white dark:bg-surface-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl" onclick="event.stopPropagation()">
-    <h3 id="modalTitle" class="text-lg font-semibold text-surface-900 dark:text-white mb-4">Editar</h3>
+<!-- Modal editar -->
+<div id="editModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 hidden items-center justify-center z-50 p-4" id="editModalOverlay">
+  <div class="bg-white dark:bg-surface-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl" data-close-modal>
+    <div class="flex items-center justify-between mb-4">
+      <h3 id="modalTitle" class="text-lg font-semibold text-surface-900 dark:text-white">Editar</h3>
+      <button id="closeEditModalBtn" class="text-surface-400 hover:text-surface-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
     <form id="editForm">
       <input type="hidden" id="editType" value="" />
       <input type="hidden" id="editId" value="" />
       <div id="editFields"></div>
       <div class="flex gap-3 mt-6">
-        <button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-lg bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 font-medium transition-colors">
+        <button type="button" id="cancelEditBtn" class="flex-1 py-2.5 rounded-lg bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 font-medium transition-colors">
           Cancelar
         </button>
-        <button type="submit" form="editForm" class="flex-1 py-2.5 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-medium transition-colors">
+        <button type="submit" class="flex-1 py-2.5 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-medium transition-colors">
           Guardar
         </button>
       </div>
@@ -176,11 +178,11 @@
 </div>
 
 <!-- Modal historial de peso -->
-<div id="weightModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 hidden items-center justify-center z-50 p-4" onclick="closeWeightModal(event)">
-  <div class="bg-white dark:bg-surface-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
+<div id="weightModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white dark:bg-surface-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl max-h-[80vh] overflow-y-auto" data-close-weight-modal>
     <div class="flex items-center justify-between mb-4">
       <h3 class="text-lg font-semibold text-surface-900 dark:text-white">Historial de peso</h3>
-      <button onclick="closeWeightModal()" class="text-surface-400 hover:text-surface-600">
+      <button id="closeWeightModalBtn" class="text-surface-400 hover:text-surface-600">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
         </svg>
@@ -212,6 +214,10 @@
 <script>
   const STORAGE_KEY = 'colochatime_data';
   
+  // =====================
+  // STORAGE HELPERS
+  // =====================
+  
   function getData() {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored ? JSON.parse(stored) : { 
@@ -220,7 +226,7 @@
     };
   }
   
-  function saveData(data: any) {
+  function saveData(data) {
     data.meta = data.meta || {};
     data.meta.lastUpdated = new Date().toISOString();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -235,11 +241,11 @@
     const data = getData();
     const today = new Date().toDateString();
     
-    const todayMeals = (data.petMeals || []).filter((m: any) => 
+    const todayMeals = (data.petMeals || []).filter((m) => 
       new Date(m.createdAt).toDateString() === today
     );
     
-    const todayCalories = todayMeals.reduce((sum: number, m: any) => sum + (m.calories || 0), 0);
+    const todayCalories = todayMeals.reduce((sum, m) => sum + (m.calories || 0), 0);
     const calorieGoal = data.pet?.dailyCalorieGoal || 400;
     const calorieProgress = Math.min(Math.round((todayCalories / calorieGoal) * 100), 100);
     const weight = data.pet?.weight;
@@ -267,9 +273,9 @@
     const data = getData();
     const today = new Date().toDateString();
     
-    const todayMeals = (data.petMeals || []).filter((m: any) => 
+    const todayMeals = (data.petMeals || []).filter((m) => 
       new Date(m.createdAt).toDateString() === today
-    ).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    ).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     
     const container = document.getElementById('todayPetMeals');
     if (!container) return;
@@ -283,7 +289,7 @@
       return;
     }
     
-    container.innerHTML = todayMeals.map((meal: any) => `
+    container.innerHTML = todayMeals.map((meal) => `
       <div class="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-surface-800 border border-surface-200/50 dark:border-surface-700/50 group hover:border-pink-200 dark:hover:border-pink-800 transition-colors">
         <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0">
           <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -299,12 +305,12 @@
           <p class="text-xs text-surface-400 dark:text-surface-500">kcal</p>
         </div>
         <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button onclick="editMeal('${meal.id}')" class="p-1.5 rounded-lg text-surface-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+          <button data-edit-meal="${meal.id}" class="p-1.5 rounded-lg text-surface-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
             </svg>
           </button>
-          <button onclick="deleteMeal('${meal.id}')" class="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+          <button data-delete-meal="${meal.id}" class="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
             </svg>
@@ -312,6 +318,14 @@
         </div>
       </div>
     `).join('');
+    
+    // Attach event listeners
+    container.querySelectorAll('[data-edit-meal]').forEach(btn => {
+      btn.addEventListener('click', () => editMeal(btn.dataset.editMeal));
+    });
+    container.querySelectorAll('[data-delete-meal]').forEach(btn => {
+      btn.addEventListener('click', () => deleteMeal(btn.dataset.deleteMeal));
+    });
   }
   
   // =====================
@@ -320,15 +334,35 @@
   
   function openModal() {
     const modal = document.getElementById('editModal');
-    if (modal) modal.classList.remove('hidden');
-    if (modal) modal.classList.add('flex');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
   }
   
-  function closeModal(e?: any) {
-    if (e && e.target !== e.currentTarget) return;
+  function closeModal() {
     const modal = document.getElementById('editModal');
-    if (modal) modal.classList.add('hidden');
-    if (modal) modal.classList.remove('flex');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+  }
+  
+  function openWeightModal() {
+    const modal = document.getElementById('weightModal');
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+    renderWeightHistory();
+  }
+  
+  function closeWeightModal() {
+    const modal = document.getElementById('weightModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
   }
   
   function editName() {
@@ -336,7 +370,7 @@
     const modal = document.getElementById('editModal');
     const title = document.getElementById('modalTitle');
     const fields = document.getElementById('editFields');
-    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    const typeInput = document.getElementById('editType');
     
     if (!modal || !title || !fields || !typeInput) return;
     
@@ -357,7 +391,7 @@
     
     openModal();
     setTimeout(() => {
-      const input = document.getElementById('editValue') as HTMLInputElement;
+      const input = document.getElementById('editValue');
       if (input) input.focus();
     }, 100);
   }
@@ -367,7 +401,7 @@
     const modal = document.getElementById('editModal');
     const title = document.getElementById('modalTitle');
     const fields = document.getElementById('editFields');
-    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    const typeInput = document.getElementById('editType');
     
     if (!modal || !title || !fields || !typeInput) return;
     
@@ -393,21 +427,21 @@
     
     openModal();
     setTimeout(() => {
-      const input = document.getElementById('editValue') as HTMLInputElement;
+      const input = document.getElementById('editValue');
       if (input) input.focus();
     }, 100);
   }
   
-  function editMeal(mealId: string) {
+  function editMeal(mealId) {
     const data = getData();
-    const meal = data.petMeals.find((m: any) => m.id === mealId);
+    const meal = data.petMeals.find(m => m.id === mealId);
     if (!meal) return;
     
     const modal = document.getElementById('editModal');
     const title = document.getElementById('modalTitle');
     const fields = document.getElementById('editFields');
-    const typeInput = document.getElementById('editType') as HTMLInputElement;
-    const idInput = document.getElementById('editId') as HTMLInputElement;
+    const typeInput = document.getElementById('editType');
+    const idInput = document.getElementById('editId');
     
     if (!modal || !title || !fields || !typeInput || !idInput) return;
     
@@ -456,56 +490,49 @@
     openModal();
   }
   
-  function showWeightHistory() {
+  function renderWeightHistory() {
     const data = getData();
-    const modal = document.getElementById('weightModal');
     const history = document.getElementById('weightHistory');
     const noHistory = document.getElementById('noWeightHistory');
     
-    if (!modal) return;
+    if (!history) return;
     
     const weightHistory = data.pet?.weightHistory || [];
     
-    if (history) {
-      if (weightHistory.length === 0) {
-        history.innerHTML = '';
-      } else {
-        history.innerHTML = weightHistory
-          .slice()
-          .reverse()
-          .map((w: any) => `
-            <div class="flex items-center justify-between p-3 rounded-lg bg-surface-50 dark:bg-surface-900/50">
-              <div>
-                <p class="text-sm font-semibold text-surface-900 dark:text-white">${w.weight} kg</p>
-                <p class="text-xs text-surface-400">${formatDate(w.date)}</p>
-              </div>
-              <button onclick="deleteWeight('${w.date}')" class="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
+    if (weightHistory.length === 0) {
+      history.innerHTML = '';
+    } else {
+      history.innerHTML = weightHistory
+        .slice()
+        .reverse()
+        .map((w, i) => `
+          <div class="flex items-center justify-between p-3 rounded-lg bg-surface-50 dark:bg-surface-900/50">
+            <div>
+              <p class="text-sm font-semibold text-surface-900 dark:text-white">${w.weight} kg</p>
+              <p class="text-xs text-surface-400">${formatDate(w.date)}</p>
             </div>
-          `).join('');
-      }
+            <button data-delete-weight="${i}" class="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        `).join('');
+      
+      // Attach delete listeners
+      history.querySelectorAll('[data-delete-weight]').forEach(btn => {
+        btn.addEventListener('click', () => deleteWeight(parseInt(btn.dataset.deleteWeight)));
+      });
     }
     
     if (noHistory) noHistory.classList.toggle('hidden', weightHistory.length > 0);
-    if (modal) modal.classList.remove('hidden');
-    if (modal) modal.classList.add('flex');
-  }
-  
-  function closeWeightModal(e?: any) {
-    if (e && e.target !== e.currentTarget) return;
-    const modal = document.getElementById('weightModal');
-    if (modal) modal.classList.add('hidden');
-    if (modal) modal.classList.remove('flex');
   }
   
   // =====================
   // ACTIONS
   // =====================
   
-  function addMeal(food: string, calories: number) {
+  function addMeal(food, calories) {
     const data = getData();
     if (!data.petMeals) data.petMeals = [];
     
@@ -522,34 +549,38 @@
     updatePetStats();
   }
   
-  function deleteMeal(mealId: string) {
+  function deleteMeal(mealId) {
     const data = getData();
-    data.petMeals = (data.petMeals || []).filter((m: any) => m.id !== mealId);
+    data.petMeals = (data.petMeals || []).filter(m => m.id !== mealId);
     saveData(data);
     updatePetStats();
   }
   
-  function deleteWeight(dateStr: string) {
+  function deleteWeight(index) {
     const data = getData();
-    data.pet.weightHistory = (data.pet.weightHistory || []).filter((w: any) => w.date !== dateStr);
-    if (data.pet.weightHistory.length > 0) {
-      const last = data.pet.weightHistory[data.pet.weightHistory.length - 1];
-      data.pet.weight = last.weight;
+    const weightHistory = data.pet.weightHistory || [];
+    weightHistory.splice(index, 1);
+    data.pet.weightHistory = weightHistory;
+    
+    // Actualizar peso actual al último registro
+    if (weightHistory.length > 0) {
+      data.pet.weight = weightHistory[weightHistory.length - 1].weight;
     } else {
       data.pet.weight = null;
     }
+    
     saveData(data);
     updatePetStats();
-    showWeightHistory();
+    renderWeightHistory();
   }
   
-  function escapeHtml(text: string): string {
+  function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
   
-  function formatDate(dateStr: string): string {
+  function formatDate(dateStr) {
     const date = new Date(dateStr);
     const today = new Date();
     const yesterday = new Date(today);
@@ -564,47 +595,73 @@
   // EVENT LISTENERS
   // =====================
   
+  // Form submit para agregar comida
   document.getElementById('petMealForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const foodInput = document.getElementById('petFoodInput') as HTMLInputElement;
-    const calInput = document.getElementById('petCaloriesInput') as HTMLInputElement;
+    const foodInput = document.getElementById('petFoodInput');
+    const calInput = document.getElementById('petCaloriesInput');
     
-    if (foodInput.value.trim()) {
-      addMeal(foodInput.value.trim(), parseInt(calInput.value) || 0);
+    if (foodInput?.value.trim()) {
+      addMeal(foodInput.value.trim(), parseInt(calInput?.value) || 0);
       foodInput.value = '';
       calInput.value = '';
       foodInput.focus();
     }
   });
   
+  // Edit name button
+  document.getElementById('editNameBtn')?.addEventListener('click', editName);
+  
+  // Edit calorie button
+  document.getElementById('editCalorieBtn')?.addEventListener('click', editCalorieGoal);
+  
+  // Show weight history button
+  document.getElementById('showWeightBtn')?.addEventListener('click', openWeightModal);
+  
+  // Close edit modal
+  document.getElementById('closeEditModalBtn')?.addEventListener('click', closeModal);
+  document.getElementById('cancelEditBtn')?.addEventListener('click', closeModal);
+  
+  // Close weight modal
+  document.getElementById('closeWeightModalBtn')?.addEventListener('click', closeWeightModal);
+  
+  // Click outside to close modals
+  document.getElementById('editModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'editModal') closeModal();
+  });
+  document.getElementById('weightModal')?.addEventListener('click', (e) => {
+    if (e.target.id === 'weightModal') closeWeightModal();
+  });
+  
+  // Edit form submit
   document.getElementById('editForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    const typeInput = document.getElementById('editType');
     const data = getData();
     
-    if (typeInput.value === 'name') {
-      const valueInput = document.getElementById('editValue') as HTMLInputElement;
+    if (typeInput?.value === 'name') {
+      const valueInput = document.getElementById('editValue');
       data.pet = data.pet || { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] };
-      data.pet.name = valueInput.value.trim();
+      data.pet.name = valueInput?.value.trim() || '';
       saveData(data);
     } 
-    else if (typeInput.value === 'calorieGoal') {
-      const valueInput = document.getElementById('editValue') as HTMLInputElement;
+    else if (typeInput?.value === 'calorieGoal') {
+      const valueInput = document.getElementById('editValue');
       data.pet = data.pet || { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] };
-      data.pet.dailyCalorieGoal = parseInt(valueInput.value) || 400;
+      data.pet.dailyCalorieGoal = parseInt(valueInput?.value) || 400;
       saveData(data);
     }
-    else if (typeInput.value === 'meal') {
-      const idInput = document.getElementById('editId') as HTMLInputElement;
-      const foodInput = document.getElementById('editFood') as HTMLInputElement;
-      const calInput = document.getElementById('editCalories') as HTMLInputElement;
-      const timeInput = document.getElementById('editTime') as HTMLInputElement;
+    else if (typeInput?.value === 'meal') {
+      const idInput = document.getElementById('editId');
+      const foodInput = document.getElementById('editFood');
+      const calInput = document.getElementById('editCalories');
+      const timeInput = document.getElementById('editTime');
       
-      const meal = data.petMeals.find((m: any) => m.id === idInput.value);
+      const meal = data.petMeals.find(m => m.id === idInput?.value);
       if (meal) {
-        meal.food = foodInput.value.trim();
-        meal.calories = parseInt(calInput.value) || 0;
-        meal.time = timeInput.value;
+        meal.food = foodInput?.value.trim() || '';
+        meal.calories = parseInt(calInput?.value) || 0;
+        meal.time = timeInput?.value || '12:00';
         saveData(data);
       }
     }
@@ -613,10 +670,11 @@
     updatePetStats();
   });
   
+  // Add weight form
   document.getElementById('addWeightForm')?.addEventListener('submit', (e) => {
     e.preventDefault();
-    const input = document.getElementById('newWeightInput') as HTMLInputElement;
-    if (input.value) {
+    const input = document.getElementById('newWeightInput');
+    if (input?.value) {
       const data = getData();
       data.pet = data.pet || { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] };
       data.pet.weightHistory = data.pet.weightHistory || [];
@@ -631,10 +689,11 @@
       saveData(data);
       input.value = '';
       updatePetStats();
-      showWeightHistory();
+      renderWeightHistory();
     }
   });
   
+  // Clear all meals
   document.getElementById('clearPetMealsBtn')?.addEventListener('click', () => {
     if (confirm('¿Eliminar todo el historial de comidas?')) {
       const data = getData();
