@@ -1,0 +1,40 @@
+---
+// Dev Data - Agrega datos de prueba en desarrollo
+---
+
+<script>
+  // Solo agregar datos si no existen
+  if (localStorage.getItem('colochatime_data') === null) {
+    const now = new Date();
+    
+    const sampleData = {
+      tasks: [
+        { id: crypto.randomUUID(), text: 'Ir al gimnasio', completed: true, createdAt: new Date(now.getTime() - 7200000).toISOString(), time: '07:00' },
+        { id: crypto.randomUUID(), text: 'Tomar agua (8 vasos)', completed: false, createdAt: new Date(now.getTime() - 3600000).toISOString(), time: '10:00' },
+        { id: crypto.randomUUID(), text: 'Llamar a mamá', completed: false, createdAt: new Date(now.getTime() - 1800000).toISOString(), time: '15:00' },
+        { id: crypto.randomUUID(), text: 'Preparar cena saludable', completed: false, createdAt: new Date().toISOString(), time: '18:00' },
+      ],
+      pet: {
+        name: 'Camila',
+        weight: 58.5,
+        dailyCalorieGoal: 450,
+        weightHistory: [
+          { weight: 60.2, date: new Date(now.getTime() - 1209600000).toISOString() },
+          { weight: 59.0, date: new Date(now.getTime() - 604800000).toISOString() },
+          { weight: 58.5, date: now.toISOString() }
+        ]
+      },
+      petMeals: [
+        { id: crypto.randomUUID(), food: 'Avena con frutas', calories: 180, time: '08:00', createdAt: new Date(now.getTime() - 3600000).toISOString() },
+        { id: crypto.randomUUID(), food: 'Ensalada César con pollo', calories: 320, time: '13:30', createdAt: new Date(now.getTime() - 900000).toISOString() },
+      ],
+      settings: { darkMode: false },
+      meta: {
+        lastUpdated: now.toISOString(),
+        createdAt: now.toISOString()
+      }
+    };
+    
+    localStorage.setItem('colochatime_data', JSON.stringify(sampleData));
+  }
+</script>

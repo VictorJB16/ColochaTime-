@@ -1,0 +1,157 @@
+---
+// Timeline Component - Con comidas de la persona
+---
+
+<section class="py-6 px-6">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+        <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-base font-semibold text-surface-900 dark:text-white">Timeline</h2>
+    </div>
+    
+    <!-- Timeline -->
+    <div id="timeline" class="relative">
+      <!-- Timeline line -->
+      <div class="absolute left-4 top-0 bottom-0 w-px bg-surface-200 dark:bg-surface-700"></div>
+      
+      <!-- Empty state -->
+      <div id="emptyTimeline" class="text-center py-8">
+        <svg class="w-10 h-10 mx-auto mb-3 text-surface-300 dark:text-surface-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <p class="text-sm text-surface-400 dark:text-surface-500">Sin eventos para hoy</p>
+        <p class="text-xs text-surface-400 dark:text-surface-500 mt-1">Agrega tareas o comidas</p>
+      </div>
+      
+      <!-- Events container -->
+      <div id="timelineEvents" class="space-y-2"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const STORAGE_KEY = 'colochatime_data';
+  
+  function getData() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : { tasks: [], petMeals: [] };
+  }
+  
+  function renderTimeline() {
+    const data = getData();
+    const today = new Date().toDateString();
+    
+    const events: Array<{
+      id: string;
+      title: string;
+      time: string;
+      type: 'task' | 'petMeal';
+      completed?: boolean;
+      calories?: number;
+    }> = [];
+    
+    // Get tasks with time from today
+    (data.tasks || []).forEach((t: any) => {
+      if (t.time && new Date(t.createdAt).toDateString() === today) {
+        events.push({
+          id: t.id,
+          title: t.text,
+          time: t.time,
+          type: 'task',
+          completed: t.completed
+        });
+      }
+    });
+    
+    // Get meals from today
+    (data.petMeals || []).forEach((m: any) => {
+      if (new Date(m.createdAt).toDateString() === today) {
+        events.push({
+          id: m.id,
+          title: m.food,
+          time: m.time,
+          type: 'petMeal',
+          calories: m.calories
+        });
+      }
+    });
+    
+    // Sort by time
+    events.sort((a, b) => {
+      const [hA, mA] = a.time.split(':').map(Number);
+      const [hB, mB] = b.time.split(':').map(Number);
+      return (hA * 60 + mA) - (hB * 60 + mB);
+    });
+    
+    const emptyTimeline = document.getElementById('emptyTimeline');
+    const timelineEvents = document.getElementById('timelineEvents');
+    
+    if (!emptyTimeline || !timelineEvents) return;
+    
+    if (events.length === 0) {
+      emptyTimeline.style.display = 'block';
+      timelineEvents.innerHTML = '';
+      return;
+    }
+    
+    emptyTimeline.style.display = 'none';
+    
+    timelineEvents.innerHTML = events.map(event => {
+      const isTask = event.type === 'task';
+      const dotColor = isTask 
+        ? (event.completed ? 'bg-green-500' : 'bg-blue-500')
+        : 'bg-pink-500';
+      
+      return `
+        <div class="relative flex gap-3 ${event.completed ? 'opacity-50' : ''}">
+          <!-- Timeline dot -->
+          <div class="relative z-10 flex-shrink-0 w-8 h-8 rounded-full ${dotColor} flex items-center justify-center">
+            ${isTask ? `
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="${event.completed ? 'M5 13l4 4L19 7' : 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2'}"/>
+              </svg>
+            ` : `
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.871v1.5m0-1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871v4.5"/>
+              </svg>
+            `}
+          </div>
+          
+          <!-- Event card -->
+          <div class="flex-1 pb-4">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="text-xs font-medium text-surface-500 dark:text-surface-400">
+                ${event.time}
+              </span>
+              <span class="w-1 h-1 rounded-full bg-surface-300 dark:bg-surface-600"></span>
+              <span class="text-xs ${isTask ? (event.completed ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400') : 'text-pink-600 dark:text-pink-400'}">
+                ${isTask ? (event.completed ? 'Completada' : 'Tarea') : `${event.calories} kcal`}
+              </span>
+            </div>
+            <p class="text-sm text-surface-900 dark:text-white font-medium ${event.completed ? 'line-through' : ''}">
+              ${escapeHtml(event.title)}
+            </p>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  // Listen for updates
+  window.addEventListener('colochatime:update', renderTimeline);
+  
+  // Initial render
+  renderTimeline();
+</script>

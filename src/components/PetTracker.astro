@@ -1,0 +1,652 @@
+---
+// Persona Tracker - Sistema completo para organizar el día de tu pareja
+---
+
+<section class="py-6 px-6">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header con nombre editable -->
+    <div class="flex items-center justify-between mb-5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 
+              id="personName" 
+              class="text-lg font-semibold text-surface-900 dark:text-white cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+              onclick="editName()"
+              title="Click para editar"
+            >
+              ¿Cómo se llama?
+            </h2>
+            <button onclick="editName()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-300 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/>
+              </svg>
+            </button>
+          </div>
+          <p class="text-xs text-surface-500 dark:text-surface-400">Su día organizado</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-3 gap-3 mb-4">
+      
+      <!-- Calorías -->
+      <div class="bg-white dark:bg-surface-800 rounded-xl p-4 border border-surface-200/50 dark:border-surface-700/50">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/>
+            </svg>
+            <span class="text-xs text-surface-500 dark:text-surface-400">Calorías</span>
+          </div>
+          <button onclick="editCalorieGoal()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-300">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="flex items-end gap-1">
+          <span class="text-2xl font-bold text-surface-900 dark:text-white" id="caloriesToday">0</span>
+          <span class="text-sm text-surface-400 mb-0.5">/ <span id="calorieGoal">400</span> kcal</span>
+        </div>
+        <div class="mt-2 h-1.5 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden">
+          <div id="calorieBar" class="h-full bg-orange-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <!-- Peso -->
+      <div class="bg-white dark:bg-surface-800 rounded-xl p-4 border border-surface-200/50 dark:border-surface-700/50">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3m0-3h.75"/>
+            </svg>
+            <span class="text-xs text-surface-500 dark:text-surface-400">Peso</span>
+          </div>
+          <button onclick="showWeightHistory()" class="text-surface-400 hover:text-surface-600 dark:hover:text-surface-300">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="flex items-end gap-1">
+          <span class="text-2xl font-bold text-surface-900 dark:text-white" id="petWeight">--</span>
+          <span class="text-sm text-surface-400 mb-0.5">kg</span>
+        </div>
+      </div>
+      
+      <!-- Comidas -->
+      <div class="bg-white dark:bg-surface-800 rounded-xl p-4 border border-surface-200/50 dark:border-surface-700/50">
+        <div class="flex items-center gap-2 mb-2">
+          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.871v1.5m0-1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871v4.5"/>
+          </svg>
+          <span class="text-xs text-surface-500 dark:text-surface-400">Comidas</span>
+        </div>
+        <span class="text-2xl font-bold text-surface-900 dark:text-white" id="mealsCount">0</span>
+        <p class="text-xs text-surface-400">registros hoy</p>
+      </div>
+    </div>
+    
+    <!-- Quick Add Meal -->
+    <div class="bg-white dark:bg-surface-800 rounded-xl p-4 border border-surface-200/50 dark:border-surface-700/50 mb-4">
+      <h3 class="text-xs font-medium text-surface-500 dark:text-surface-400 mb-3">Registrar comida</h3>
+      
+      <form id="petMealForm" class="flex gap-2">
+        <div class="flex-1">
+          <input 
+            type="text" 
+            id="petFoodInput" 
+            placeholder="Ej: Almuerzo completo"
+            class="w-full px-3 py-2.5 rounded-lg border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all text-sm"
+            maxlength="80"
+          />
+        </div>
+        <div class="w-24">
+          <input 
+            type="number" 
+            id="petCaloriesInput" 
+            placeholder="kcal"
+            class="w-full px-3 py-2.5 rounded-lg border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder-surface-400 dark:placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-transparent transition-all text-sm text-center"
+            min="0"
+            max="2000"
+          />
+        </div>
+        <button 
+          type="submit"
+          class="px-4 py-2.5 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-medium transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+    
+    <!-- Today's Meals -->
+    <div class="mb-4">
+      <h3 class="text-xs font-medium text-surface-500 dark:text-surface-400 mb-3">
+        Comidas de hoy
+      </h3>
+      
+      <div id="todayPetMeals" class="space-y-2">
+        <div class="text-center py-6 text-sm text-surface-400 dark:text-surface-500">
+          Sin registros hoy
+        </div>
+      </div>
+    </div>
+    
+    <!-- Clear Button -->
+    <div id="clearPetSection" class="hidden mt-4 pt-4 border-t border-surface-200 dark:border-surface-700">
+      <button 
+        id="clearPetMealsBtn"
+        class="w-full py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+      >
+        Limpiar historial de comidas
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal para editar -->
+<div id="editModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 hidden items-center justify-center z-50 p-4" onclick="closeModal(event)">
+  <div class="bg-white dark:bg-surface-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl" onclick="event.stopPropagation()">
+    <h3 id="modalTitle" class="text-lg font-semibold text-surface-900 dark:text-white mb-4">Editar</h3>
+    <form id="editForm">
+      <input type="hidden" id="editType" value="" />
+      <input type="hidden" id="editId" value="" />
+      <div id="editFields"></div>
+      <div class="flex gap-3 mt-6">
+        <button type="button" onclick="closeModal()" class="flex-1 py-2.5 rounded-lg bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 font-medium transition-colors">
+          Cancelar
+        </button>
+        <button type="submit" form="editForm" class="flex-1 py-2.5 rounded-lg bg-pink-500 hover:bg-pink-600 text-white font-medium transition-colors">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal historial de peso -->
+<div id="weightModal" class="fixed inset-0 bg-black/50 dark:bg-black/70 hidden items-center justify-center z-50 p-4" onclick="closeWeightModal(event)">
+  <div class="bg-white dark:bg-surface-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl max-h-[80vh] overflow-y-auto" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-surface-900 dark:text-white">Historial de peso</h3>
+      <button onclick="closeWeightModal()" class="text-surface-400 hover:text-surface-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    
+    <form id="addWeightForm" class="flex gap-2 mb-4">
+      <input 
+        type="number" 
+        id="newWeightInput" 
+        placeholder="Nuevo peso (kg)"
+        step="0.1"
+        class="flex-1 px-3 py-2 rounded-lg border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder-surface-400 text-sm"
+        min="0"
+      />
+      <button type="submit" class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white font-medium text-sm">
+        Agregar
+      </button>
+    </form>
+    
+    <div id="weightHistory" class="space-y-2">
+      <!-- Se llena con JS -->
+    </div>
+    
+    <p id="noWeightHistory" class="hidden text-center py-4 text-sm text-surface-400">Sin registros de peso</p>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'colochatime_data';
+  
+  function getData() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : { 
+      pet: { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] }, 
+      petMeals: [] 
+    };
+  }
+  
+  function saveData(data: any) {
+    data.meta = data.meta || {};
+    data.meta.lastUpdated = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    window.dispatchEvent(new CustomEvent('colochatime:update'));
+  }
+  
+  // =====================
+  // UI UPDATES
+  // =====================
+  
+  function updatePetStats() {
+    const data = getData();
+    const today = new Date().toDateString();
+    
+    const todayMeals = (data.petMeals || []).filter((m: any) => 
+      new Date(m.createdAt).toDateString() === today
+    );
+    
+    const todayCalories = todayMeals.reduce((sum: number, m: any) => sum + (m.calories || 0), 0);
+    const calorieGoal = data.pet?.dailyCalorieGoal || 400;
+    const calorieProgress = Math.min(Math.round((todayCalories / calorieGoal) * 100), 100);
+    const weight = data.pet?.weight;
+    
+    const nameEl = document.getElementById('personName');
+    const caloriesEl = document.getElementById('caloriesToday');
+    const goalEl = document.getElementById('calorieGoal');
+    const barEl = document.getElementById('calorieBar');
+    const weightEl = document.getElementById('petWeight');
+    const mealsCountEl = document.getElementById('mealsCount');
+    const clearSection = document.getElementById('clearPetSection');
+    
+    if (nameEl) nameEl.textContent = data.pet?.name || '¿Cómo se llama?';
+    if (caloriesEl) caloriesEl.textContent = todayCalories.toString();
+    if (goalEl) goalEl.textContent = calorieGoal.toString();
+    if (barEl) barEl.style.width = `${calorieProgress}%`;
+    if (weightEl) weightEl.textContent = weight ? weight.toFixed(1) : '--';
+    if (mealsCountEl) mealsCountEl.textContent = todayMeals.length.toString();
+    if (clearSection) clearSection.classList.toggle('hidden', (data.petMeals || []).length === 0);
+    
+    renderTodayMeals();
+  }
+  
+  function renderTodayMeals() {
+    const data = getData();
+    const today = new Date().toDateString();
+    
+    const todayMeals = (data.petMeals || []).filter((m: any) => 
+      new Date(m.createdAt).toDateString() === today
+    ).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    
+    const container = document.getElementById('todayPetMeals');
+    if (!container) return;
+    
+    if (todayMeals.length === 0) {
+      container.innerHTML = `
+        <div class="text-center py-6 text-sm text-surface-400 dark:text-surface-500">
+          Sin registros hoy
+        </div>
+      `;
+      return;
+    }
+    
+    container.innerHTML = todayMeals.map((meal: any) => `
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-surface-800 border border-surface-200/50 dark:border-surface-700/50 group hover:border-pink-200 dark:hover:border-pink-800 transition-colors">
+        <div class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.871v1.5m0-1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871v4.5"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm text-surface-900 dark:text-white font-medium truncate">${escapeHtml(meal.food)}</p>
+          <p class="text-xs text-surface-400 dark:text-surface-500">${meal.time}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-bold text-orange-600 dark:text-orange-400">${meal.calories}</p>
+          <p class="text-xs text-surface-400 dark:text-surface-500">kcal</p>
+        </div>
+        <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <button onclick="editMeal('${meal.id}')" class="p-1.5 rounded-lg text-surface-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
+            </svg>
+          </button>
+          <button onclick="deleteMeal('${meal.id}')" class="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  // =====================
+  // MODALS
+  // =====================
+  
+  function openModal() {
+    const modal = document.getElementById('editModal');
+    if (modal) modal.classList.remove('hidden');
+    if (modal) modal.classList.add('flex');
+  }
+  
+  function closeModal(e?: any) {
+    if (e && e.target !== e.currentTarget) return;
+    const modal = document.getElementById('editModal');
+    if (modal) modal.classList.add('hidden');
+    if (modal) modal.classList.remove('flex');
+  }
+  
+  function editName() {
+    const data = getData();
+    const modal = document.getElementById('editModal');
+    const title = document.getElementById('modalTitle');
+    const fields = document.getElementById('editFields');
+    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    
+    if (!modal || !title || !fields || !typeInput) return;
+    
+    title.textContent = '¿Cómo se llama?';
+    typeInput.value = 'name';
+    
+    fields.innerHTML = `
+      <input 
+        type="text" 
+        id="editValue" 
+        placeholder="Su nombre"
+        value="${data.pet?.name || ''}"
+        class="w-full px-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-pink-500/50 text-lg"
+        maxlength="30"
+        autofocus
+      />
+    `;
+    
+    openModal();
+    setTimeout(() => {
+      const input = document.getElementById('editValue') as HTMLInputElement;
+      if (input) input.focus();
+    }, 100);
+  }
+  
+  function editCalorieGoal() {
+    const data = getData();
+    const modal = document.getElementById('editModal');
+    const title = document.getElementById('modalTitle');
+    const fields = document.getElementById('editFields');
+    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    
+    if (!modal || !title || !fields || !typeInput) return;
+    
+    title.textContent = 'Meta calórica diaria';
+    typeInput.value = 'calorieGoal';
+    
+    fields.innerHTML = `
+      <div class="relative">
+        <input 
+          type="number" 
+          id="editValue" 
+          placeholder="Ej: 400"
+          value="${data.pet?.dailyCalorieGoal || 400}"
+          class="w-full px-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white placeholder-surface-400 focus:outline-none focus:ring-2 focus:ring-pink-500/50 text-lg"
+          min="100"
+          max="5000"
+          autofocus
+        />
+        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400">kcal</span>
+      </div>
+      <p class="text-xs text-surface-500 mt-2">Promedio recomendado: 400-600 kcal por comida</p>
+    `;
+    
+    openModal();
+    setTimeout(() => {
+      const input = document.getElementById('editValue') as HTMLInputElement;
+      if (input) input.focus();
+    }, 100);
+  }
+  
+  function editMeal(mealId: string) {
+    const data = getData();
+    const meal = data.petMeals.find((m: any) => m.id === mealId);
+    if (!meal) return;
+    
+    const modal = document.getElementById('editModal');
+    const title = document.getElementById('modalTitle');
+    const fields = document.getElementById('editFields');
+    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    const idInput = document.getElementById('editId') as HTMLInputElement;
+    
+    if (!modal || !title || !fields || !typeInput || !idInput) return;
+    
+    title.textContent = 'Editar comida';
+    typeInput.value = 'meal';
+    idInput.value = mealId;
+    
+    fields.innerHTML = `
+      <div class="space-y-3">
+        <div>
+          <label class="text-xs text-surface-500 mb-1 block">Comida</label>
+          <input 
+            type="text" 
+            id="editFood" 
+            value="${escapeHtml(meal.food)}"
+            class="w-full px-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500/50"
+            maxlength="80"
+          />
+        </div>
+        <div>
+          <label class="text-xs text-surface-500 mb-1 block">Calorías</label>
+          <div class="relative">
+            <input 
+              type="number" 
+              id="editCalories" 
+              value="${meal.calories}"
+              class="w-full px-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500/50"
+              min="0"
+              max="2000"
+            />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-surface-400">kcal</span>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-surface-500 mb-1 block">Hora</label>
+          <input 
+            type="time" 
+            id="editTime" 
+            value="${meal.time}"
+            class="w-full px-4 py-3 rounded-xl border border-surface-300 dark:border-surface-600 bg-white dark:bg-surface-900 text-surface-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500/50"
+          />
+        </div>
+      </div>
+    `;
+    
+    openModal();
+  }
+  
+  function showWeightHistory() {
+    const data = getData();
+    const modal = document.getElementById('weightModal');
+    const history = document.getElementById('weightHistory');
+    const noHistory = document.getElementById('noWeightHistory');
+    
+    if (!modal) return;
+    
+    const weightHistory = data.pet?.weightHistory || [];
+    
+    if (history) {
+      if (weightHistory.length === 0) {
+        history.innerHTML = '';
+      } else {
+        history.innerHTML = weightHistory
+          .slice()
+          .reverse()
+          .map((w: any) => `
+            <div class="flex items-center justify-between p-3 rounded-lg bg-surface-50 dark:bg-surface-900/50">
+              <div>
+                <p class="text-sm font-semibold text-surface-900 dark:text-white">${w.weight} kg</p>
+                <p class="text-xs text-surface-400">${formatDate(w.date)}</p>
+              </div>
+              <button onclick="deleteWeight('${w.date}')" class="p-1.5 rounded-lg text-surface-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+          `).join('');
+      }
+    }
+    
+    if (noHistory) noHistory.classList.toggle('hidden', weightHistory.length > 0);
+    if (modal) modal.classList.remove('hidden');
+    if (modal) modal.classList.add('flex');
+  }
+  
+  function closeWeightModal(e?: any) {
+    if (e && e.target !== e.currentTarget) return;
+    const modal = document.getElementById('weightModal');
+    if (modal) modal.classList.add('hidden');
+    if (modal) modal.classList.remove('flex');
+  }
+  
+  // =====================
+  // ACTIONS
+  // =====================
+  
+  function addMeal(food: string, calories: number) {
+    const data = getData();
+    if (!data.petMeals) data.petMeals = [];
+    
+    const meal = {
+      id: crypto.randomUUID(),
+      food,
+      calories: parseInt(calories) || 0,
+      time: new Date().toTimeString().slice(0, 5),
+      createdAt: new Date().toISOString()
+    };
+    
+    data.petMeals.push(meal);
+    saveData(data);
+    updatePetStats();
+  }
+  
+  function deleteMeal(mealId: string) {
+    const data = getData();
+    data.petMeals = (data.petMeals || []).filter((m: any) => m.id !== mealId);
+    saveData(data);
+    updatePetStats();
+  }
+  
+  function deleteWeight(dateStr: string) {
+    const data = getData();
+    data.pet.weightHistory = (data.pet.weightHistory || []).filter((w: any) => w.date !== dateStr);
+    if (data.pet.weightHistory.length > 0) {
+      const last = data.pet.weightHistory[data.pet.weightHistory.length - 1];
+      data.pet.weight = last.weight;
+    } else {
+      data.pet.weight = null;
+    }
+    saveData(data);
+    updatePetStats();
+    showWeightHistory();
+  }
+  
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+  
+  function formatDate(dateStr: string): string {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === today.toDateString()) return 'Hoy';
+    if (date.toDateString() === yesterday.toDateString()) return 'Ayer';
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  
+  // =====================
+  // EVENT LISTENERS
+  // =====================
+  
+  document.getElementById('petMealForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const foodInput = document.getElementById('petFoodInput') as HTMLInputElement;
+    const calInput = document.getElementById('petCaloriesInput') as HTMLInputElement;
+    
+    if (foodInput.value.trim()) {
+      addMeal(foodInput.value.trim(), parseInt(calInput.value) || 0);
+      foodInput.value = '';
+      calInput.value = '';
+      foodInput.focus();
+    }
+  });
+  
+  document.getElementById('editForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const typeInput = document.getElementById('editType') as HTMLInputElement;
+    const data = getData();
+    
+    if (typeInput.value === 'name') {
+      const valueInput = document.getElementById('editValue') as HTMLInputElement;
+      data.pet = data.pet || { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] };
+      data.pet.name = valueInput.value.trim();
+      saveData(data);
+    } 
+    else if (typeInput.value === 'calorieGoal') {
+      const valueInput = document.getElementById('editValue') as HTMLInputElement;
+      data.pet = data.pet || { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] };
+      data.pet.dailyCalorieGoal = parseInt(valueInput.value) || 400;
+      saveData(data);
+    }
+    else if (typeInput.value === 'meal') {
+      const idInput = document.getElementById('editId') as HTMLInputElement;
+      const foodInput = document.getElementById('editFood') as HTMLInputElement;
+      const calInput = document.getElementById('editCalories') as HTMLInputElement;
+      const timeInput = document.getElementById('editTime') as HTMLInputElement;
+      
+      const meal = data.petMeals.find((m: any) => m.id === idInput.value);
+      if (meal) {
+        meal.food = foodInput.value.trim();
+        meal.calories = parseInt(calInput.value) || 0;
+        meal.time = timeInput.value;
+        saveData(data);
+      }
+    }
+    
+    closeModal();
+    updatePetStats();
+  });
+  
+  document.getElementById('addWeightForm')?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('newWeightInput') as HTMLInputElement;
+    if (input.value) {
+      const data = getData();
+      data.pet = data.pet || { name: '', weight: null, dailyCalorieGoal: 400, weightHistory: [] };
+      data.pet.weightHistory = data.pet.weightHistory || [];
+      
+      const entry = {
+        weight: parseFloat(input.value),
+        date: new Date().toISOString()
+      };
+      data.pet.weightHistory.push(entry);
+      data.pet.weight = parseFloat(input.value);
+      
+      saveData(data);
+      input.value = '';
+      updatePetStats();
+      showWeightHistory();
+    }
+  });
+  
+  document.getElementById('clearPetMealsBtn')?.addEventListener('click', () => {
+    if (confirm('¿Eliminar todo el historial de comidas?')) {
+      const data = getData();
+      data.petMeals = [];
+      saveData(data);
+      updatePetStats();
+    }
+  });
+  
+  // Listen for updates
+  window.addEventListener('colochatime:update', updatePetStats);
+  
+  // Initial render
+  updatePetStats();
+</script>

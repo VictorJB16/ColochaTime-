@@ -1,0 +1,134 @@
+---
+// Stats Component - Con info de la persona
+---
+
+<section class="py-6 px-6">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Greeting & Date -->
+    <div class="mb-5">
+      <h1 class="text-2xl font-semibold text-surface-900 dark:text-white" id="greeting">¡Hola!</h1>
+      <p class="text-sm text-surface-500 dark:text-surface-400 mt-0.5" id="currentDate"></p>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="mb-5">
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-sm font-medium text-surface-600 dark:text-surface-300">Progreso de hoy</span>
+        <span class="text-sm font-semibold text-primary-600 dark:text-primary-400" id="progressPercent">0%</span>
+      </div>
+      <div class="h-1.5 bg-surface-200 dark:bg-surface-700 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-primary-500 to-primary-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-3 gap-2.5">
+      <div class="bg-white dark:bg-surface-800 rounded-xl p-3.5 border border-surface-200/50 dark:border-surface-700/50">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-xs text-surface-500 dark:text-surface-400">Hechas</span>
+        </div>
+        <p class="text-lg font-bold text-surface-900 dark:text-white" id="completedTasks">0</p>
+      </div>
+      
+      <div class="bg-white dark:bg-surface-800 rounded-xl p-3.5 border border-surface-200/50 dark:border-surface-700/50">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-3.5 h-3.5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <span class="text-xs text-surface-500 dark:text-surface-400">Pendientes</span>
+        </div>
+        <p class="text-lg font-bold text-surface-900 dark:text-white" id="pendingTasks">0</p>
+      </div>
+      
+      <div class="bg-white dark:bg-surface-800 rounded-xl p-3.5 border border-surface-200/50 dark:border-surface-700/50">
+        <div class="flex items-center gap-2 mb-1">
+          <svg class="w-3.5 h-3.5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/>
+          </svg>
+          <span class="text-xs text-surface-500 dark:text-surface-400">Calorías</span>
+        </div>
+        <p class="text-lg font-bold text-surface-900 dark:text-white">
+          <span id="caloriesShort">0</span>
+          <span class="text-xs font-normal text-surface-400">kcal</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function updateGreeting() {
+    const hour = new Date().getHours();
+    let greeting = '¡Hola!';
+    if (hour >= 5 && hour < 12) greeting = '¡Buenos días!';
+    else if (hour >= 12 && hour < 18) greeting = '¡Buenas tardes!';
+    else greeting = '¡Buenas noches!';
+    
+    const greetingEl = document.getElementById('greeting');
+    if (greetingEl) greetingEl.textContent = greeting;
+  }
+  
+  function updateDate() {
+    const options: Intl.DateTimeFormatOptions = { 
+      weekday: 'long', 
+      day: 'numeric',
+      month: 'long' 
+    };
+    const dateEl = document.getElementById('currentDate');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('es-ES', options);
+    }
+  }
+  
+  function updateStats() {
+    const stored = localStorage.getItem('colochatime_data');
+    
+    updateGreeting();
+    updateDate();
+    
+    if (!stored) return;
+    
+    try {
+      const data = JSON.parse(stored);
+      const today = new Date().toDateString();
+      
+      // Tareas
+      const todayTasks = (data.tasks || []).filter((t: any) => 
+        new Date(t.createdAt).toDateString() === today
+      );
+      const completedTasks = todayTasks.filter((t: any) => t.completed).length;
+      const totalTasks = todayTasks.length;
+      const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      
+      // Calorías
+      const todayMeals = (data.petMeals || []).filter((m: any) => 
+        new Date(m.createdAt).toDateString() === today
+      );
+      const todayCalories = todayMeals.reduce((sum: number, m: any) => sum + (m.calories || 0), 0);
+      
+      // Update DOM
+      const progressPercentEl = document.getElementById('progressPercent');
+      const progressBar = document.getElementById('progressBar');
+      const completedTasksEl = document.getElementById('completedTasks');
+      const pendingTasksEl = document.getElementById('pendingTasks');
+      const caloriesShortEl = document.getElementById('caloriesShort');
+      
+      if (progressPercentEl) progressPercentEl.textContent = `${progressPercent}%`;
+      if (progressBar) progressBar.style.width = `${progressPercent}%`;
+      if (completedTasksEl) completedTasksEl.textContent = completedTasks.toString();
+      if (pendingTasksEl) pendingTasksEl.textContent = (totalTasks - completedTasks).toString();
+      if (caloriesShortEl) caloriesShortEl.textContent = todayCalories.toString();
+      
+    } catch (e) {
+      console.error('Error updating stats:', e);
+    }
+  }
+  
+  updateStats();
+  setInterval(updateStats, 3000);
+  window.addEventListener('colochatime:update', updateStats);
+</script>
